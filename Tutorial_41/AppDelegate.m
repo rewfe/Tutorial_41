@@ -8,6 +8,10 @@
 
 #import "AppDelegate.h"
 
+static NSString *const NotificationCategoryIdent = @"ACTIONABLE";
+static NSString *const NotificationActionOneIdent = @"First Action";
+static NSString *const NotificationActionTwoIdent = @"Second Action";
+
 @interface AppDelegate ()
 
 @end
@@ -17,7 +21,45 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [self registerForNotificationsWithActions];
     return YES;
+    
+}
+
+- (void)registerForNotificationsWithActions {
+    // Action 1
+    UIMutableUserNotificationAction *action1;
+    action1 = [[UIMutableUserNotificationAction alloc] init];
+    [action1 setActivationMode:UIUserNotificationActivationModeBackground];
+    [action1 setTitle:@"Open"];
+    [action1 setIdentifier:NotificationActionOneIdent];
+    [action1 setDestructive:NO];
+    [action1 setAuthenticationRequired:NO];
+    
+    // Action 2
+    UIMutableUserNotificationAction *action2;
+    action2 = [[UIMutableUserNotificationAction alloc] init];
+    [action2 setActivationMode:UIUserNotificationActivationModeBackground];
+    [action2 setTitle:@"Close"];
+    [action2 setIdentifier:NotificationActionTwoIdent];
+    [action2 setDestructive:YES];
+    [action2 setAuthenticationRequired:NO];
+    
+    // Create a category with actions
+    UIMutableUserNotificationCategory *actionCategory;
+    actionCategory = [[UIMutableUserNotificationCategory alloc] init];
+    [actionCategory setIdentifier:NotificationCategoryIdent];
+    [actionCategory setActions:@[ action1, action2 ]
+                    forContext:UIUserNotificationActionContextDefault];
+    NSSet *categories = [NSSet setWithObject:actionCategory];
+    
+    // Register the notification
+    UIUserNotificationType types =
+    (UIUserNotificationTypeAlert | UIUserNotificationTypeSound |
+     UIUserNotificationTypeBadge);
+    UIUserNotificationSettings *settings =
+    [UIUserNotificationSettings settingsForTypes:types categories:categories];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

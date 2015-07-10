@@ -24,4 +24,16 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)schedulenotification:(id)sender {
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:5];
+    localNotification.alertBody =
+    [NSString stringWithFormat:@"Fired at %@", [NSDate date]];
+    localNotification.soundName = UILocalNotificationDefaultSoundName;
+    localNotification.applicationIconBadgeNumber = 1;
+    localNotification.category = @"ACTIONABLE";
+    
+    [[UIApplication sharedApplication]
+     scheduleLocalNotification:localNotification];
+}
 @end
