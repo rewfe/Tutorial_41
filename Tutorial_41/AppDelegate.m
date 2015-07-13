@@ -26,6 +26,36 @@ static NSString *const NotificationActionTwoIdent = @"Second Action";
     
 }
 
+- (void)application:(UIApplication *)application
+didReceiveLocalNotification:(UILocalNotification *)notification {
+    NSLog(@"Received Local Notification:%@", notification);
+    
+    if ([UIApplication sharedApplication].applicationState ==
+        UIApplicationStateActive) {
+        UIAlertView *alertView = [[UIAlertView alloc]
+                                  initWithTitle:@"Local Notification"
+                                  message:@"App"
+                                  delegate:nil
+                                  cancelButtonTitle:@"Ok"
+                                  otherButtonTitles:nil];
+        [alertView show];
+    }
+}
+
+- (void)application:(UIApplication *)application
+handleActionWithIdentifier:(NSString *)identifier
+forLocalNotification:(NSDictionary *)userInfo
+  completionHandler:(void (^)())completionHandler {
+    if ([identifier isEqualToString:NotificationActionOneIdent]) {
+        NSLog(@"action 1.");
+    } else if ([identifier isEqualToString:NotificationActionTwoIdent]) {
+        NSLog(@"action 2.");
+    }
+    if (completionHandler) {
+        completionHandler();
+    }
+}
+
 - (void)registerForNotificationsWithActions {
     // Action 1
     UIMutableUserNotificationAction *action1;
